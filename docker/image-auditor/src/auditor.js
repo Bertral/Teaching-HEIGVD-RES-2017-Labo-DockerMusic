@@ -12,7 +12,7 @@ var musicians = [];
 // SERVEUR
 var serverSocket = net.createServer(function (socket) {
 // lors de la connexion au serveur, le client reçoit la liste des musiciens puis est déconnecté
-    socket.end(JSON.stringify(musicians));
+    socket.end(JSON.stringify(musicians, null, 4));
 });
 
 // MULTICAST
@@ -29,7 +29,7 @@ multicastSocket.on("message", function (msg, rinfo) {
         }
     }
 
-    musicians.add(json);
+    musicians.push(json);
 });
 
 // purge les inactifs
@@ -39,7 +39,7 @@ function purgeInactives() {
 
         if (now - musicians[i].lastSeen > 5000) {
             console.log("Purging : " + musicians[i].uuid);
-            musicians.removeItem(musicians[i]);
+            musicians.splice(i, 1);
         }
     }
 }
